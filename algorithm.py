@@ -22,6 +22,9 @@ def edit_distance_with_backtrace(s, t):
                        (D[i-1][j-1] + cost, (i-1, j-1))]  # Substitution
             
             D[i][j], ptr[i][j] = min(choices, key=lambda x: x[0])
+    #TO DO: write the table as a file
+
+    
     
     # Backtrace to reconstruct alignment
     aligned_s, aligned_t = [], []
@@ -41,8 +44,8 @@ def edit_distance_with_backtrace(s, t):
     
     return D[m][n], "".join(aligned_s[::-1]), "".join(aligned_t[::-1])
 
-# Example usage
-s1, s2 = "AGGCTATCACCTGACCTCCAGGCCGA--TGCCC---", "TAG-CTATCAC--GACCGC--GGTCGATTTGCCCGAC"
+# testing
+s1, s2 = "AAATGTGTGTGTTCCCCAACGATGTCTCTAGAAGACGAACATCCC", "ATGGAAACGTGAACCTAACTAACACATATGGATCCGACTGACGTTCTCTGATGTAGCCT"
 distance, aligned_s1, aligned_s2 = edit_distance_with_backtrace(s1.replace('-', ''), s2.replace('-', ''))
 print(f"Edit Distance: {distance}")
 print(f"Alignment:\n{aligned_s1}\n{aligned_s2}")
