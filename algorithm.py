@@ -1,4 +1,5 @@
 import numpy as np
+#import imp2cost # type: ignore
 
 def edit_distance_with_backtrace(s, t):
     m, n = len(s), len(t)
@@ -12,16 +13,29 @@ def edit_distance_with_backtrace(s, t):
     for j in range(1, n+1):
         D[0][j] = j
         ptr[0][j] = (0, j-1)
+
+    #TO DO: read in cost table as referance
+    # open the sample file used 
+    file = open('imp2cost.txt') 
+    
+    # read the content of the file opened 
+    content = file.readlines() 
+
+    
     
     # Fill DP table
     for i in range(1, m+1):
         for j in range(1, n+1):
-            cost = 0 if s[i-1] == t[j-1] else 1
-            choices = [(D[i-1][j] + 1, (i-1, j)),   # Deletion
-                       (D[i][j-1] + 1, (i, j-1)),   # Insertion
+            rowIndex = int(content[0].index(s[i-1])/2) 
+            columnIndex = content[0].index(t[j-1])
+            tablecost = int(content[rowIndex][columnIndex])
+            cost = 0 if s[i-1] == t[j-1] else tablecost
+            choices = [(D[i-1][j] + tablecost, (i-1, j)),   # Deletion
+                       (D[i][j-1] + tablecost, (i, j-1)),   # Insertion
                        (D[i-1][j-1] + cost, (i-1, j-1))]  # Substitution
             
             D[i][j], ptr[i][j] = min(choices, key=lambda x: x[0])
+
     #TO DO: write the table as a file
 
     
@@ -45,7 +59,7 @@ def edit_distance_with_backtrace(s, t):
     return D[m][n], "".join(aligned_s[::-1]), "".join(aligned_t[::-1])
 
 # testing
-s1, s2 = "AAATGTGTGTGTTCCCCAACGATGTCTCTAGAAGACGAACATCCC", "ATGGAAACGTGAACCTAACTAACACATATGGATCCGACTGACGTTCTCTGATGTAGCCT"
+s1, s2 = "CGCAATTCTGAAGCGCTGGGGAAGACGGGT", "TATCCCATCGAACGCCTATTCTAGGAT"
 distance, aligned_s1, aligned_s2 = edit_distance_with_backtrace(s1.replace('-', ''), s2.replace('-', ''))
 print(f"Edit Distance: {distance}")
 print(f"Alignment:\n{aligned_s1}\n{aligned_s2}")
