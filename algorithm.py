@@ -29,16 +29,19 @@ def edit_distance_with_backtrace(s, t):
             rowIndex = int(content[0].index(s[i-1])/2) 
             columnIndex = content[0].index(t[j-1])
             tablecost = int(content[rowIndex][columnIndex])
-            cost = 0 if s[i-1] == t[j-1] else tablecost
-            choices = [(D[i-1][j] + tablecost, (i-1, j)),   # Deletion
-                       (D[i][j-1] + tablecost, (i, j-1)),   # Insertion
-                       (D[i-1][j-1] + cost, (i-1, j-1))]  # Substitution
+            choices = [(D[i-1][j] + tablecost, (i-1, j)),   # left
+                       (D[i][j-1] + tablecost, (i, j-1)),   # down
+                       (D[i-1][j-1] + tablecost, (i-1, j-1))]  # diagonal
             
             D[i][j], ptr[i][j] = min(choices, key=lambda x: x[0])
 
     #TO DO: write the table as a file
-
-    
+    for i in range(0, m+1):
+        lin=""
+        for j in range(0, n+1):
+            lin += str(D[m-i][j])
+            lin += ", "
+        print(lin)
     
     # Backtrace to reconstruct alignment
     aligned_s, aligned_t = [], []
